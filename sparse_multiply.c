@@ -21,22 +21,39 @@ void sparse__multiply(
 // =========================================================
 // USER IMPLEMENTATION
 // =========================================================
-/*
-Outputs & CSR format:
-  Name        | Length   | Description
-  out_nnz     | int      | number of non-zero matrix elements
-  values      | out_nnz  | non-zero matrix elements
-  col_indices | out_nnz  | column index for each non-zero element
-  row_ptrs    | rows + 1 | offsets into values/col_indices for each row
-  y           | rows     | multiplication result
-*/
+/**
+ * @brief Converts a dense matrix to CSR format and computes a matrix-vector product.
+ *
+ * @details This function compresses a dense matrix 'A' into the Compressed Sparse Row (CSR)
+ *          format representation (values, col_indices, row_ptrs) while
+ *          simultaneously calculating the total number of non-zero elements.
+ *          It then immediately uses this sparse data to compute
+ *          the matrix-vector multiplication y = A * x.
+ *
+ * @param[in]  rows         Number of rows in the dense matrix A.
+ * @param[in]  cols         Number of columns in the dense matrix A.
+ * @param[in]  A            Pointer to the continuous dense input matrix array of size (rows * cols).
+ * @param[in]  x            Pointer to the input vector array of size (cols).
+ * @param[in,out] out_nnz   Pointer to an integer that tracks and outputs the total number of non-zero elements.
+ *                          @note This must be initialized to 0 by the caller before execution.
+ * @param[out] values       Pre-allocated array to store the non-zero elements of the matrix.
+ * @param[out] col_indices  Pre-allocated array to store the column indices of the non-zero elements.
+ * @param[out] row_ptrs     Pre-allocated array of size (rows + 1) to store the row index pointers for CSR.
+ * @param[out] y            Pre-allocated output vector array of size (rows) to store the result of the multiplication.
+ *
+ * @note No additional dynamic memory allocations were made.
+ *
+ * @pre Pointers must not be null and output arrays must be large enough to hold all non-zero elements.
+ * @post The output arrays will be populated with the CSR representation and multiplication result.
+ *
+ * @author Mahmoud Hashem
+ * @date 2026-05-16
+ */
 void sparse_multiply(
     int rows, int cols, const double* A, const double* x,
     int* out_nnz, double* values, int* col_indices, int* row_ptrs,
     double* y
 ) {
-
-    // Initial offset into values array
     row_ptrs[0] = 0;
 
     for (int r = 0; r < rows; r++) {
